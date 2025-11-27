@@ -1,0 +1,64 @@
+{% extends 'doctor/dashboard.html' %}
+
+{% block title %}Mis pacientes – CardioApp{% endblock %}
+
+{% block content %}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Mis pacientes</h1>
+    <a href="{% url 'pacientes:crear' %}" class="btn btn-primary btn-sm">
+        <i class="fas fa-user-plus mr-1"></i> Registrar paciente
+    </a>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+
+        <div class="table-responsive">
+            <table class="table table-sm table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre completo</th>
+                        <th>Correo</th>
+                        <th style="width: 260px;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for p in pacientes %}
+                    <tr>
+                        <td>{{ p.id_usuario }}</td>
+                        <td>{{ p.nombre }} {{ p.apellido1 }} {{ p.apellido2 }}</td>
+                        <td>{{ p.correo }}</td>
+                        <td>
+                            <a href="{% url 'pacientes:editar' p.pk %}"
+                               class="btn btn-outline-primary btn-sm mb-1">
+                                Editar
+                            </a>
+
+                            <a href="{% url 'pacientes:eliminar' p.pk %}"
+                               class="btn btn-outline-danger btn-sm mb-1">
+                                Eliminar
+                            </a>
+
+                            <a href="{% url 'citas:crear' %}?paciente={{ p.id_usuario }}"
+                               class="btn btn-outline-info btn-sm mb-1">
+                                Crear cita
+                            </a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">
+                            No hay pacientes registrados.
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

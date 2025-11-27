@@ -1,0 +1,50 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}CardioApp{% endblock %}</title>
+
+    <!-- SB Admin 2 – CSS -->
+    <link href="{% static 'theme/css/sb-admin-2.min.css' %}" rel="stylesheet">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        {% include 'components/sidebar.html' %}
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                {% include 'components/navbar.html' %}
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    {% block content %}{% endblock %}
+                </div>
+
+            </div>
+
+            {% include 'components/footer.html' %}
+        </div>
+    </div>
+
+    <!-- SB Admin 2 JS -->
+    <script src="{% static 'theme/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'theme/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'theme/js/sb-admin-2.min.js' %}"></script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>
