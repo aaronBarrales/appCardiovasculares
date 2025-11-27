@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard Administrador – CardioApp{% endblock %}
+
+{% block content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Panel de Administración</h1>
+</div>
+
+<!-- Bienvenida -->
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <h5 class="font-weight-bold">Hola, {{ user.nombre }} {{ user.apellido1 }}</h5>
+        <p class="mb-0">
+            Desde este panel puedes gestionar usuarios, revisar información del sistema y administrar la plataforma.
+        </p>
+    </div>
+</div>
+
+<!-- Opciones principales -->
+<div class="row">
+
+    <!-- Gestión de usuarios -->
+    <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-3">
+            <div class="card-body d-flex flex-column justify-content-between">
+                <div>
+                    <h5 class="text-primary font-weight-bold">Gestión de usuarios</h5>
+                    <p class="mb-3">Crear, editar, bloquear y administrar usuarios del sistema.</p>
+                </div>
+                <a href="{% url 'usuarios:lista' %}" class="btn btn-primary btn-block">
+                    Ir a usuarios
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cerrar sesión -->
+    <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-left-danger shadow h-100 py-3">
+            <div class="card-body d-flex flex-column justify-content-between">
+                <div>
+                    <h5 class="text-danger font-weight-bold">Cerrar sesión</h5>
+                    <p class="mb-3">Salir de tu cuenta de forma segura.</p>
+                </div>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button class="btn btn-danger btn-block" type="submit">
+                        Cerrar sesión
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "admin/dashboard.html" %}
+
+{% block title %}
+  {% if object %}Editar usuario{% else %}Crear usuario{% endif %} – CardioApp
+{% endblock %}
+
+{% block content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+        {% if object %}Editar usuario{% else %}Crear usuario{% endif %}
+    </h1>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="row">
+                {% for field in form %}
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label font-weight-bold">
+                            {{ field.label }}
+                        </label>
+                        {{ field }}
+
+                        {% if field.help_text %}
+                            <small class="form-text text-muted">
+                                {{ field.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in field.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="mt-4 d-flex justify-content-end gap-2">
+                <a href="{% url 'usuarios:lista' %}" class="btn btn-secondary mr-2">
+                    Cancelar
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    Guardar usuario
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

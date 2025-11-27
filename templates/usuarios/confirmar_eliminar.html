@@ -1,0 +1,13 @@
+{% extends 'admin/dashboard.html' %}
+
+{% block content %}
+<h1>Eliminar usuario</h1>
+
+<p>¿Seguro que deseas eliminar al usuario: {{ object }}?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Sí, eliminar</button>
+    <a href="{% url 'usuarios:lista' %}">Cancelar</a>
+</form>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'doctor/dashboard.html' %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <!-- Título + acciones -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Crear cita médica</h1>
+        <a href="{% url 'citas:lista' %}" class="btn btn-light btn-sm">
+            <i class="fas fa-arrow-left mr-1"></i> Volver a mis citas
+        </a>
+    </div>
+
+    <!-- Card con el formulario -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        Detalles de la cita
+                    </h6>
+                </div>
+                <div class="card-body">
+
+                    <p class="text-muted small mb-4">
+                        Completa la información de la cita médica.  
+                        Los campos marcados con <span class="text-danger">*</span> son obligatorios.
+                    </p>
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        {# Si tus forms ya agregan "form-control" en widgets, podemos usar as_p sin problema #}
+                        {{ form.as_p }}
+
+                        <div class="d-flex justify-content-end mt-3">
+                            <a href="{% url 'citas:lista' %}" class="btn btn-secondary mr-2">
+                                Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save mr-1"></i> Guardar cita
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

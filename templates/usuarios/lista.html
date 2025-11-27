@@ -1,0 +1,139 @@
+{% extends 'admin/dashboard.html' %}
+
+{% block title %}Gestión de usuarios – CardioApp{% endblock %}
+
+{% block content %}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Gestión de usuarios</h1>
+    <a href="{% url 'usuarios:crear' %}" class="btn btn-primary btn-sm">
+        <i class="fas fa-user-plus mr-1"></i> Crear usuario
+    </a>
+</div>
+
+<!-- Filtros -->
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <form method="get" class="form-inline row">
+
+            <div class="form-group col-md-4 mb-2">
+                <label for="buscar" class="sr-only">Buscar</label>
+                <input id="buscar"
+                       type="text"
+                       name="q"
+                       class="form-control w-100"
+                       placeholder="Buscar por nombre o correo"
+                       value="{{ q }}">
+            </div>
+
+            <div class="form-group col-md-3 mb-2">
+                <label for="filtro-rol" class="sr-only">Rol</label>
+                <select id="filtro-rol" name="rol" class="form-control w-100">
+                    <option value="">Todos los roles</option>
+                    {% for rol in roles_disponibles %}
+                        <option value="{{ rol.id_rol }}"
+                            {% if rol_seleccionado|default:'' == rol.id_rol|stringformat:'s' %}selected{% endif %}>
+                            {{ rol.rol }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group col-md-3 mb-2">
+                <label for="filtro-estado" class="sr-only">Estado</label>
+                <select id="filtro-estado" name="estado" class="form-control w-100">
+                    <option value="">Todos los estados</option>
+                    <option value="ACTIVO" {% if estado_seleccionado == 'ACTIVO' %}selected{% endif %}>ACTIVO</option>
+                    <option value="INACTIVO" {% if estado_seleccionado == 'INACTIVO' %}selected{% endif %}>INACTIVO</option>
+                </select>
+            </div>
+
+            <div class="form-group col-md-2 mb-2 d-flex">
+                <button type="submit" class="btn btn-primary mr-2 flex-fill">
+                    Filtrar
+                </button>
+                <a href="{% url 'usuarios:lista' %}" class="btn btn-outline-secondary flex-fill">
+                    Limpiar
+                </a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<!-- Tabla de usuarios -->
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-sm table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Estado</th>
+                        <th style="width: 220px;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for u in usuarios %}
+                    <tr>
+                        <td>{{ u.id_usuario }}</td>
+                        <td>{{ u.nombre }} {{ u.apellido1 }} {{ u.apellido2 }}</td>
+                        <td>{{ u.correo }}</td>
+                        <td>
+                            {% if u.estado|default:"ACTIVO" == "ACTIVO" %}
+                                <span class="badge badge-success">ACTIVO</span>
+                            {% else %}
+                                <span class="badge badge-secondary">INACTIVO</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'usuarios:editar' u.pk %}"
+                               class="btn btn-outline-primary btn-sm mb-1">
+                                Editar
+                            </a>
+
+                            {% if u.estado == "INACTIVO" %}
+                                <form action="{% url 'usuarios:desbloquear' u.pk %}"
+                                      method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                            class="btn btn-outline-success btn-sm mb-1">
+                                        Desbloquear
+                                    </button>
+                                </form>
+                            {% else %}
+                                <form action="{% url 'usuarios:bloquear' u.pk %}"
+                                      method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                            class="btn btn-outline-warning btn-sm mb-1">
+                                        Bloquear
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">
+                            No hay usuarios registrados.
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Aquí, si luego agregas paginación, puedes meterla abajo -->
+        {# 
+        <nav aria-label="Paginación de usuarios">
+            ...
+        </nav>
+        #}
+
+    </div>
+</div>
+
+{% endblock %}
