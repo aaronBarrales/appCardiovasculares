@@ -1,2 +1,21 @@
+# Entornos virtuales
+TrabajoTerminal/
+venv/
+.venv/
+env/
+
+# Python
 __pycache__/
-*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+
+# Django
+*.sqlite3
+media/
+staticfiles/
+
+# VSCode / Windows
+.vscode/
+.DS_Store
+Thumbs.db
