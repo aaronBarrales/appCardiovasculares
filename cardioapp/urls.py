@@ -12,8 +12,19 @@ from clinica.views import (
 from usuarios.forms import UsuarioPasswordResetForm
 from usuarios.views.password_reset import UsuarioPasswordResetConfirmView
 
+from django.conf import settings
+from django.conf.urls.static import static
+
+
+from django.shortcuts import redirect
+
+def home_redirect(request):
+    return redirect("doctor_dashboard")  # o redir_por_rol
+
 
 urlpatterns = [
+
+    path("", home_redirect, name="home"),
     path('login/', auth_views.LoginView.as_view(
         template_name='auth/login.html',
         authentication_form=EmailAuthenticationForm
@@ -75,4 +86,8 @@ urlpatterns = [
 
 
     path('admin/', admin.site.urls),
+    path("reportes/", include("reportes.urls")),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

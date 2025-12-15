@@ -1,0 +1,103 @@
+{# templates/reportes/_reporte_body_pdf.html #}
+
+<style>
+  .rep h1 { font-size: 18px; margin: 0 0 6px 0; }
+  .rep h2 { font-size: 13px; margin: 12px 0 6px 0; }
+  .rep .muted { color: #666; }
+  .rep .box { border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; }
+  .rep .risk-number { font-size: 34px; font-weight: 900; margin: 6px 0; }
+  .rep table { width: 100%; border-collapse: collapse; }
+  .rep th, .rep td { border: 1px solid #ddd; padding: 6px; vertical-align: top; }
+  .rep th { background: #f3f3f3; text-align: left; }
+  .rep .page-break { page-break-before: always; }
+</style>
+
+<div class="rep">
+
+  <!-- PÁGINA 1 -->
+  <h1>Reporte médico</h1>
+  <div class="muted">CardioApp — Trabajo Terminal</div>
+
+  <table style="margin-top: 10px;">
+    <tr>
+      <td style="width:50%; padding: 0; border: none;">
+        <div class="box">
+          <h2>Datos del médico</h2>
+          <div><b>Nombre:</b> {{ cita.doctor.nombre }} {{ cita.doctor.apellido1 }}</div>
+          <div><b>Correo:</b> {{ cita.doctor.correo }}</div>
+        </div>
+      </td>
+      <td style="width:50%; padding: 0; border: none;">
+        <div class="box">
+          <h2>Datos del paciente</h2>
+          <div><b>Nombre:</b> {{ cita.paciente.nombre }} {{ cita.paciente.apellido1 }}</div>
+          <div><b>Correo:</b> {{ cita.paciente.correo }}</div>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <div class="box">
+    <h2>Datos registrados en la cita</h2>
+
+    {% for sec in datos_cita %}
+      <div style="margin-top: 10px; font-weight: 800;">{{ sec.titulo }}</div>
+      <table style="margin-top: 6px;">
+        <thead>
+          <tr><th style="width: 45%;">Dato</th><th>Valor</th></tr>
+        </thead>
+        <tbody>
+          {% for it in sec.items %}
+            <tr><td>{{ it.label }}</td><td>{{ it.value }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endfor %}
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- PÁGINA 2 -->
+  <h1>Resultados de predicción</h1>
+
+  <div class="box">
+    <h2>Probabilidad de riesgo cardiovascular</h2>
+    <div class="risk-number" style="color: {{ color_riesgo }};">
+      {{ resultado.proba_riesgo|floatformat:3 }}
+    </div>
+    <div><b>Clasificación:</b> <span style="color: {{ color_riesgo }}; font-weight: 800;">{{ nivel_riesgo }}</span></div>
+    <div class="muted" style="margin-top: 4px;">Un valor más cercano a 1 indica mayor riesgo estimado por el modelo.</div>
+  </div>
+
+  <div class="box">
+    <h2>Explicación del modelo (SHAP)</h2>
+    <div class="muted">Variables con mayor contribución para este caso.</div>
+
+    {% if shap_img_url %}
+      <div style="margin-top: 8px;">
+        <img src="{{ shap_img_url }}" style="width: 100%; max-width: 760px;">
+      </div>
+    {% else %}
+      <div class="muted" style="margin-top: 8px;">(Gráfico no disponible)</div>
+    {% endif %}
+  </div>
+
+  <div class="box">
+    <h2>Variables más influyentes (tabla)</h2>
+    <table>
+      <thead>
+        <tr><th>Variable</th><th>Valor</th><th>Impacto (SHAP)</th></tr>
+      </thead>
+      <tbody>
+        {% for d in resultado.top_contributions %}
+        <tr>
+          <td>{{ d.feature_es }}</td>
+          <td>{{ d.value_human }}</td>
+          <td>{{ d.shap|floatformat:4 }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>

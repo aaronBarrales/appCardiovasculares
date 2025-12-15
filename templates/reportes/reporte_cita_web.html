@@ -1,0 +1,77 @@
+{% extends "doctor/dashboard.html" %}
+{% block title %}Reporte médico – CardioApp{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0 text-gray-800">Reporte médico</h1>
+    <div>
+      <a class="btn btn-light btn-sm" href="{% url 'citas:lista' %}">Volver</a>
+      <a class="btn btn-success btn-sm" href="{% url 'reportes:reporte_cita_pdf' cita.pk %}?download=1">Descargar PDF</a>
+    </div>
+  </div>
+
+  <div class="card shadow mb-4">
+    <div class="card-body">
+
+      {# ✅ Página web renderizada inmediato: datos del médico/paciente + datos cita #}
+      {% include "reportes/_reporte_body.html" with is_pdf=False %}
+
+      
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const url = "{% url 'reportes:reporte_cita_data' cita.pk %}";
+
+  // placeholders
+  const pTxt   = document.getElementById("js-proba");
+  const nivel  = document.getElementById("js-nivel");
+  const img    = document.getElementById("js-shap-img");
+  const spin   = document.getElementById("js-shap-spinner");
+  const tbody  = document.getElementById("js-top-tbody");
+  const errBox = document.getElementById("js-err");
+
+  fetch(url)
+    .then(r => r.json())
+    .then(data => {
+      if (!data.ok) throw new Error("Respuesta inválida");
+
+      // número riesgo
+      pTxt.textContent = (data.proba_riesgo ?? 0).toFixed(3);
+      pTxt.style.color = data.color_riesgo;
+
+      // nivel
+      nivel.textContent = data.nivel_riesgo;
+      nivel.style.color = data.color_riesgo;
+
+      // imagen shap (cache-bust)
+      img.onload = () => { img.style.display = "block"; spin.style.display = "none"; };
+      img.src = data.shap_img_url + "?t=" + Date.now();
+
+      // tabla
+      tbody.innerHTML = "";
+      (data.top_contributions || []).forEach(d => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${d.feature_es ?? d.feature ?? "-"}</td>
+          <td>${d.value_human ?? d.value ?? "-"}</td>
+          <td>${(d.shap ?? 0).toFixed(4)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    })
+    .catch(err => {
+      console.error(err);
+      spin.style.display = "none";
+      errBox.style.display = "block";
+      errBox.textContent = "Error cargando la predicción/SHAP. Reintenta o revisa consola.";
+    });
+});
+</script>
+{% endblock %}
