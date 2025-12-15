@@ -23,7 +23,7 @@ class SoloMedicoMixin(UserPassesTestMixin):
 
     def test_func(self):
         user = self.request.user
-        return getattr(user, "es_doctor", False)
+        return getattr(user, "es_medico", False)
 
     permission_denied_message = "Solo los usuarios con rol Médico pueden gestionar pacientes."
     raise_exception = True  # devuelve 403 si no es médico

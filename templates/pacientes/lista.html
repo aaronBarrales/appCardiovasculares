@@ -18,8 +18,10 @@
             <table class="table table-sm table-hover">
                 <thead class="thead-light">
                     <tr>
-                        <th>ID</th>
-                        <th>Nombre completo</th>
+                        
+                        <th>Nombre Completo</th>
+                        <th>Género</th>
+                        <th>Fecha de Nacimiento</th>
                         <th>Correo</th>
                         <th style="width: 260px;">Acciones</th>
                     </tr>
@@ -27,8 +29,22 @@
                 <tbody>
                 {% for p in pacientes %}
                     <tr>
-                        <td>{{ p.id_usuario }}</td>
+                        
                         <td>{{ p.nombre }} {{ p.apellido1 }} {{ p.apellido2 }}</td>
+                        <td>
+                            {% if p.genero %}
+                                {{ p.genero }}
+                            {% else %}
+                                <span class="text-muted">—</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if p.fecha_nacimiento %}
+                                {{ p.fecha_nacimiento|date:"Y-m-d" }}
+                            {% else %}
+                                <span class="text-muted">—</span>
+                            {% endif %}
+                        </td>
                         <td>{{ p.correo }}</td>
                         <td>
                             <a href="{% url 'pacientes:editar' p.pk %}"

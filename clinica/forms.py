@@ -26,6 +26,14 @@ class PacienteUsuarioForm(forms.ModelForm):
             'estado',
             'password',
         ]
+        widgets = {
+            'fecha_nacimiento': forms.DateInput(
+                attrs={
+                    'type': 'date',
+                    'class': 'form-control'
+                }
+            ),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
