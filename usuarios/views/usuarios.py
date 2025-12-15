@@ -55,6 +55,8 @@ class UsuarioListView(LoginRequiredMixin, SoloAdminMixin, ListView):
     def get_queryset(self):
         qs = super().get_queryset().select_related('genero')
 
+        qs = qs.exclude(pk=self.request.user.pk)
+
         rol_id = self.request.GET.get('rol')
         estado = self.request.GET.get('estado')
         q = self.request.GET.get('q')

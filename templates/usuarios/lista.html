@@ -68,9 +68,11 @@
             <table class="table table-sm table-hover">
                 <thead class="thead-light">
                     <tr>
-                        <th>ID</th>
+                        
                         <th>Nombre</th>
                         <th>Correo</th>
+                        <th>Fecha Nacimiento</th>
+                        <th>Género</th>
                         <th>Estado</th>
                         <th style="width: 220px;">Acciones</th>
                     </tr>
@@ -78,9 +80,23 @@
                 <tbody>
                 {% for u in usuarios %}
                     <tr>
-                        <td>{{ u.id_usuario }}</td>
+                        
                         <td>{{ u.nombre }} {{ u.apellido1 }} {{ u.apellido2 }}</td>
                         <td>{{ u.correo }}</td>
+                        <td>
+                        {% if u.fecha_nacimiento %}
+                            {{ u.fecha_nacimiento|date:"Y-m-d" }}
+                        {% else %}
+                            <span class="text-muted">—</span>
+                        {% endif %}
+                        </td>
+                        <td>
+                        {% if u.genero %}
+                            {{ u.genero }}
+                        {% else %}
+                            <span class="text-muted">—</span>
+                        {% endif %}
+                        </td>
                         <td>
                             {% if u.estado|default:"ACTIVO" == "ACTIVO" %}
                                 <span class="badge badge-success">ACTIVO</span>
@@ -88,6 +104,7 @@
                                 <span class="badge badge-secondary">INACTIVO</span>
                             {% endif %}
                         </td>
+
                         <td>
                             <a href="{% url 'usuarios:editar' u.pk %}"
                                class="btn btn-outline-primary btn-sm mb-1">
@@ -117,7 +134,7 @@
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="5" class="text-center text-muted">
+                        <td colspan="6" class="text-center text-muted">
                             No hay usuarios registrados.
                         </td>
                     </tr>
@@ -126,12 +143,7 @@
             </table>
         </div>
 
-        <!-- Aquí, si luego agregas paginación, puedes meterla abajo -->
-        {# 
-        <nav aria-label="Paginación de usuarios">
-            ...
-        </nav>
-        #}
+        
 
     </div>
 </div>
