@@ -8,7 +8,7 @@ def redireccion_por_rol(request):
     if getattr(user, 'es_admin', False):
         return redirect('admin_dashboard')
 
-    if getattr(user, 'es_doctor', False):
+    if getattr(user, 'es_medico', False):  
         return redirect('doctor_dashboard')
 
     if getattr(user, 'es_paciente', False):

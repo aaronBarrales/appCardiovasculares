@@ -73,6 +73,7 @@
                         <th>Correo</th>
                         <th>Fecha Nacimiento</th>
                         <th>Género</th>
+                        <th>Rol</th>
                         <th>Estado</th>
                         <th style="width: 220px;">Acciones</th>
                     </tr>
@@ -97,6 +98,16 @@
                             <span class="text-muted">—</span>
                         {% endif %}
                         </td>
+                        <td>
+                            {% with rol=u.roles.first %}
+                                {% if rol %}
+                                    {{ rol.rol|lower|capfirst }}
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                        
                         <td>
                             {% if u.estado|default:"ACTIVO" == "ACTIVO" %}
                                 <span class="badge badge-success">ACTIVO</span>
