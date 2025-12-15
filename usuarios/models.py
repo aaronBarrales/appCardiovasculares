@@ -109,6 +109,10 @@ class Usuario(models.Model):
     def has_module_perms(self, app_label):
         return self.es_admin
 
+    @classmethod
+    def get_email_field_name(cls):
+        return 'correo'
+
 
 class UserRol(models.Model):
     id_userrol = models.AutoField(primary_key=True, db_column='ID_UserRol')
