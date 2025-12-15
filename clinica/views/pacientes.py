@@ -29,6 +29,9 @@ class SoloMedicoMixin(UserPassesTestMixin):
     raise_exception = True  # devuelve 403 si no es médico
 
 
+from django.db.models import Q
+from usuarios.models import Genero  # asegúrate de importar Genero
+
 class PacienteListView(LoginRequiredMixin, SoloMedicoMixin, ListView):
     model = Usuario
     template_name = 'pacientes/lista.html'
@@ -36,13 +39,17 @@ class PacienteListView(LoginRequiredMixin, SoloMedicoMixin, ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        # 🔹 Todos los usuarios con rol "Paciente"
-        qs = Usuario.objects.filter(
-            roles__rol__rol__iexact='Paciente'
-        ).distinct()
+        qs = (
+            Usuario.objects
+            .filter(roles__rol__rol__iexact='paciente')
+            .select_related('genero')
+            .distinct()
+        )
 
-        # 🔹 Búsqueda opcional por nombre/correo
-        q = self.request.GET.get('q')
+        q = self.request.GET.get('q', '').strip()
+        genero_id = self.request.GET.get('genero', '').strip()
+        estado = self.request.GET.get('estado', '').strip()
+
         if q:
             qs = qs.filter(
                 Q(nombre__icontains=q) |
@@ -51,7 +58,22 @@ class PacienteListView(LoginRequiredMixin, SoloMedicoMixin, ListView):
                 Q(correo__icontains=q)
             )
 
-        return qs
+        if genero_id:
+            qs = qs.filter(genero_id=genero_id)
+
+        if estado:
+            qs = qs.filter(estado__iexact=estado)
+
+        return qs.order_by('nombre', 'apellido1')
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['q'] = self.request.GET.get('q', '')
+        ctx['genero_seleccionado'] = self.request.GET.get('genero', '')
+        ctx['estado_seleccionado'] = self.request.GET.get('estado', '')
+        ctx['generos_disponibles'] = Genero.objects.all()
+        return ctx
+
 
 class PacienteCreateView(LoginRequiredMixin, SoloMedicoMixin, CreateView):
     model = Usuario

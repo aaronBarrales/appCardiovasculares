@@ -11,6 +11,44 @@
     </a>
 </div>
 
+<!-- Filtros -->
+<div class="card shadow mb-4">
+  <div class="card-body">
+    <form method="get" class="form-inline row">
+
+      <div class="form-group col-md-4 mb-2">
+        <input
+          type="text"
+          name="q"
+          class="form-control w-100"
+          placeholder="Buscar por nombre o correo"
+          value="{{ q }}">
+      </div>
+
+      <div class="form-group col-md-3 mb-2">
+        <select name="genero" class="form-control w-100">
+          <option value="">Todos los géneros</option>
+          {% for g in generos_disponibles %}
+            <option value="{{ g.id_genero }}"
+              {% if genero_seleccionado|default:'' == g.id_genero|stringformat:'s' %}selected{% endif %}>
+              {{ g.genero }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      
+
+      <div class="form-group col-md-2 mb-2 d-flex">
+        <button type="submit" class="btn btn-primary mr-2 flex-fill">Filtrar</button>
+        <a href="{% url 'pacientes:lista' %}" class="btn btn-outline-secondary flex-fill">Limpiar</a>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+
 <div class="card shadow mb-4">
     <div class="card-body">
 

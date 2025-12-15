@@ -66,7 +66,7 @@ class CitaMedicaForm(forms.ModelForm):
         model = CitaMedica
         fields = [
             'paciente',
-            'fecha_cita',
+            
 
             # Crudos para el modelo / captura clínica
             'peso',
@@ -75,11 +75,8 @@ class CitaMedicaForm(forms.ModelForm):
             'glucosa',
             'presion_sistolica',
             'presion_diastolica',
-            'imc_valor',
+    
 
-            # Derivados (opcionales, se pueden poblar luego)
-            'rango_colesterol',
-            'rango_glucosa',
 
             # Estilo de vida
             'alcohol',
@@ -90,17 +87,52 @@ class CitaMedicaForm(forms.ModelForm):
             'notas',
         ]
         widgets = {
-            'fecha_cita': forms.DateInput(attrs={'type': 'date'}),
+            'paciente': forms.Select(attrs={
+                'class': 'form-control',
+            }),
 
-            'peso': forms.NumberInput(attrs={'step': '0.01', 'min': '0'}),
-            'estatura': forms.NumberInput(attrs={'step': '0.01', 'min': '0'}),
-            'colesterol_total': forms.NumberInput(attrs={'step': '0.01', 'min': '0'}),
-            'glucosa': forms.NumberInput(attrs={'step': '0.01', 'min': '0'}),
-            'presion_sistolica': forms.NumberInput(attrs={'step': '0.01', 'min': '0'}),
-            'presion_diastolica': forms.NumberInput(attrs={'step': '0.01', 'min': '0'}),
-            'imc_valor': forms.NumberInput(attrs={'step': '0.01', 'min': '0'}),
+            'peso': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Peso en kg (ej. 72.5)',
+                'step': '0.01',
+                'min': '0'
+            }),
+            'estatura': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Estatura en centímetros (ej. 170)',
+                'step': '1',
+                'min': '0'
+            }),
+            'colesterol_total': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Colesterol total (mg/dL)',
+                'step': '0.01',
+                'min': '0'
+            }),
+            'glucosa': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Glucosa (mg/dL)',
+                'step': '0.01',
+                'min': '0'
+            }),
+            'presion_sistolica': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Presión sistólica (mmHg)',
+                'step': '1',
+                'min': '0'
+            }),
+            'presion_diastolica': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Presión diastólica (mmHg)',
+                'step': '1',
+                'min': '0'
+            }),
 
-            'notas': forms.Textarea(attrs={'rows': 3}),
+            'notas': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Observaciones clínicas relevantes',
+                'rows': 3
+            }),
         }
 
     def __init__(self, *args, **kwargs):

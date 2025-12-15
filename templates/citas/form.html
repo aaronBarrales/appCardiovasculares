@@ -5,7 +5,10 @@
 
     <!-- Título + acciones -->
     <div class="d-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Crear cita médica</h1>
+        <h1 class="h3 mb-0 text-gray-800">
+        {% if form.instance.pk %}Editar cita médica{% else %}Crear cita médica{% endif %}
+        </h1>
+
         <a href="{% url 'citas:lista' %}" class="btn btn-light btn-sm">
             <i class="fas fa-arrow-left mr-1"></i> Volver a mis citas
         </a>
@@ -38,7 +41,8 @@
                                 Cancelar
                             </a>
                             <button type="submit" class="btn btn-success">
-                                <i class="fas fa-save mr-1"></i> Guardar cita
+                            <i class="fas fa-save mr-1"></i>
+                            {% if form.instance.pk %}Guardar cambios{% else %}Guardar cita{% endif %}
                             </button>
                         </div>
                     </form>

@@ -1,0 +1,35 @@
+{% extends 'doctor/dashboard.html' %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <h1 class="h3 mb-4 text-gray-800">
+        Reporte clínico de la cita #{{ cita.id_cita }}
+    </h1>
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+
+            <h5>Paciente</h5>
+            <p>{{ cita.paciente.nombre }} {{ cita.paciente.apellido1 }}</p>
+
+            <h5>Fecha de la cita</h5>
+            <p>{{ cita.fecha_cita|date:"d/m/Y" }}</p>
+
+            <h5>Datos clínicos</h5>
+            <ul>
+                <li>Peso: {{ cita.peso }} kg</li>
+                <li>Estatura: {{ cita.estatura }} m</li>
+                <li>Glucosa: {{ cita.glucosa }}</li>
+                <li>Colesterol total: {{ cita.colesterol_total }}</li>
+            </ul>
+
+            <a href="{% url 'citas:lista' %}" class="btn btn-secondary mt-3">
+                Volver a citas
+            </a>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

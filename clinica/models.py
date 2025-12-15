@@ -1,5 +1,6 @@
 from django.db import models
-
+from datetime import date
+from django.utils import timezone
 
 class RangoColesterol(models.Model):
     id_rango_colesterol = models.AutoField(primary_key=True, db_column='ID_RangoColesterol')
@@ -90,7 +91,7 @@ class CitaMedica(models.Model):
     glucosa = models.FloatField(db_column='Glucosa', null=True, blank=True)
     imc_valor = models.FloatField(db_column='IMCValor', null=True, blank=True)
 
-    fecha_cita = models.DateField(db_column='Fecha_Cita')
+    fecha_cita = models.DateField(db_column='Fecha_Cita', default=date.today)
     notas = models.CharField(max_length=255, db_column='Notas', null=True, blank=True)
 
     alcohol = models.BooleanField(db_column='Alcohol', default=False)
@@ -100,8 +101,8 @@ class CitaMedica(models.Model):
 
     # Estado / auditoría
     estado = models.CharField(max_length=20, db_column='Estado', default='ACTIVO')
-    fecha_creacion = models.DateTimeField(db_column='FechaCreacion')
-    fecha_actualizacion = models.DateTimeField(db_column='FechaActualizacion')
+    fecha_creacion = models.DateTimeField(db_column='FechaCreacion', default=timezone.now)
+    fecha_actualizacion = models.DateTimeField(db_column='FechaActualizacion', default=timezone.now)
     fecha_eliminacion = models.DateTimeField(db_column='FechaEliminacion', null=True, blank=True)
 
     # Predicción (1 a 1 opcional)
