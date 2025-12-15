@@ -72,7 +72,7 @@ class Usuario(models.Model):
         return self.roles.filter(rol__rol__iexact=nombre_rol).exists()
 
     @property
-    def es_doctor(self) -> bool:
+    def es_medico(self) -> bool:
         return self.tiene_rol('medico')
 
     @property

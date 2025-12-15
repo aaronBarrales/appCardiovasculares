@@ -23,6 +23,14 @@ class UsuarioForm(forms.ModelForm):
         help_text="Obligatoria solo al crear el usuario."
     )
 
+    rol = forms.ModelChoiceField(
+        label="Rol",
+        queryset=Rol.objects.all(),
+        required=True,
+        empty_label="Selecciona un rol",
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
+
     class Meta:
         model = Usuario
         fields = [
@@ -32,6 +40,7 @@ class UsuarioForm(forms.ModelForm):
             'genero',
             'fecha_nacimiento',
             'correo',
+            'rol'
             # 'estado',  ← IMPORTANTE: NO lo incluimos
         ]
         widgets = {
@@ -50,6 +59,22 @@ class UsuarioForm(forms.ModelForm):
         if not self.instance.pk:
             self.fields['password'].required = True
 
+        if self.instance.pk:
+            self.fields['password'].required = False
+
+            # ✅ Preseleccionar rol actual si existe
+            current = (
+                UserRol.objects
+                .filter(usuario=self.instance)
+                .select_related("rol")
+                .first()
+            )
+            if current:
+                self.fields["rol"].initial = current.rol
+
+        else:
+            self.fields['password'].required = True
+
     def save(self, commit=True):
         usuario = super().save(commit=False)
 
@@ -64,6 +89,12 @@ class UsuarioForm(forms.ModelForm):
 
         if commit:
             usuario.save()
+
+            rol = self.cleaned_data["rol"]
+            UserRol.objects.update_or_create(
+                usuario=usuario,
+                defaults={"rol": rol}
+            )
             # aquí puedes manejar roles si corresponde
         return usuario
 
